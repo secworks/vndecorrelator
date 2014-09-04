@@ -49,18 +49,27 @@ module tb_vndecorrelator();
 
 
   //----------------------------------------------------------------
+  // Internal constant and parameter definitions.
+  //----------------------------------------------------------------
+  parameter DEBUG           = 1;
+
+  parameter CLK_HALF_PERIOD = 1;
+  parameter CLK_PERIOD      = 2 * CLK_HALF_PERIOD;
+
+
+  //----------------------------------------------------------------
   // Register and Wire declarations.
   //----------------------------------------------------------------
   reg [31 : 0] cycle_ctr;
   reg [31 : 0] error_ctr;
   reg [31 : 0] tc_ctr;
 
-  reg tb_clk;
-  reg tb_reset_n;
-  reg tb_data_in;
-  reg tb_syn_in;
-  reg tb_data_out;
-  reg tb_syn_out;
+  reg  tb_clk;
+  reg  tb_reset_n;
+  reg  tb_data_in;
+  reg  tb_syn_in;
+  wire tb_data_out;
+  wire tb_syn_out;
 
 
   //----------------------------------------------------------------
@@ -88,6 +97,28 @@ module tb_vndecorrelator();
       #CLK_HALF_PERIOD;
       tb_clk = !tb_clk;
     end // clk_gen
+
+
+  //--------------------------------------------------------------------
+  // dut_monitor
+  //
+  // Monitor displaying information every cycle.
+  // Includes the cycle counter.
+  //--------------------------------------------------------------------
+  always @ (posedge tb_clk)
+    begin : dut_monitor
+      cycle_ctr = cycle_ctr + 1;
+
+      if (DEBUG)
+        begin
+          $display("cycle = %016x:", cycle_ctr);
+          $display("reset_n  = 0x%01x", dut.reset_n);
+          $display("data_in  = 0x%01x, syn_in  = 0x%01x", dut.data_in, dut.syn_in);
+          $display("data_out = 0x%01x, syn_out = 0x%01x", dut.data_out, dut.syn_out);
+          $display("ctrl     = 0x%01x", dut.vndecorr_ctrl_reg);
+          $display("");
+        end
+    end // dut_monitor
 
 
   //----------------------------------------------------------------
