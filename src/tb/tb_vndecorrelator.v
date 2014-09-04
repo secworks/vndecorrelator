@@ -47,7 +47,7 @@
 //------------------------------------------------------------------
 module tb_vndecorrelator();
 
-  
+
   //----------------------------------------------------------------
   // Register and Wire declarations.
   //----------------------------------------------------------------
@@ -139,8 +139,101 @@ module tb_vndecorrelator();
       init_sim();
       reset_dut();
 
-      #(100 *CLK_PERIOD);
+      // TC1: 1, 0 directly after eachother. Should emit 0.
+      #(10 *CLK_PERIOD);
+      $display("TC1: 1 directly followed by 0. Should emit 0.");
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
 
+      // TC2: 0, 1 directly after eachother. Should generate 1.
+      #(10 *CLK_PERIOD);
+      $display("TC2: 0 directly followed by 1. Should emit 1.");
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+
+      // TC3: 0, 0 directly after eachother. Should emit nothing.
+      #(10 *CLK_PERIOD);
+      $display("TC3: 0 directly followed by 0. Should emit nothing.");
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+
+      // TC4: 1, 1 directly after eachother. Should enmit nothing.
+      #(10 *CLK_PERIOD);
+      $display("TC4: 1 directly followed by 1. Should emit nothing.");
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+
+      // TC5: 1, 0 with 10 cycles in between. Should emit 0.
+      #(10 *CLK_PERIOD);
+      $display("TC5: 1 and later 0. Should emit 0.");
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+      #(10 *CLK_PERIOD);
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+
+      // TC6: 0, 1 with 10 cycles in between. Should emit 1.
+      #(10 *CLK_PERIOD);
+      $display("TC6: 0 and later 1. Should emit 1.");
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+      #(10 *CLK_PERIOD);
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+
+      // TC7: 0, 0 with 10 cycles in between. Should emit nothing.
+      #(10 *CLK_PERIOD);
+      $display("TC7: 0 and later 0. Should emit nothing.");
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+      #(10 *CLK_PERIOD);
+      tb_data_in = 0;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+
+      // TC8: 1, 1 with 10 cycles in between. Should emit nothing.
+      #(10 *CLK_PERIOD);
+      $display("TC8: 1 and later 1. Should emit nothing.");
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
+      #(10 *CLK_PERIOD);
+      tb_data_in = 1;
+      tb_syn_in  = 1;
+      #(CLK_PERIOD);
+      tb_syn_in  = 0;
 
       $display("");
       $display("*** von Neumann decorrelation simulation done. ***");
