@@ -36,11 +36,6 @@
 //
 //======================================================================
 
-//------------------------------------------------------------------
-// Simulator directives.
-//------------------------------------------------------------------
-`timescale 1ns/100ps
-
 
 //------------------------------------------------------------------
 // Test module.
@@ -126,7 +121,7 @@ module tb_vndecorrelator();
   //
   // Toggle reset to put the DUT into a well known state.
   //----------------------------------------------------------------
-  task reset_dut();
+  task reset_dut;
     begin
       $display("*** Toggle reset.");
       tb_reset_n = 0;
@@ -142,7 +137,7 @@ module tb_vndecorrelator();
   // Initialize all counters and testbed functionality as well
   // as setting the DUT inputs to defined values.
   //----------------------------------------------------------------
-  task init_sim();
+  task init_sim;
     begin
       cycle_ctr = 0;
       error_ctr = 0;
