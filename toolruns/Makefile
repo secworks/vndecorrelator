@@ -37,31 +37,42 @@
 #===================================================================
 
 CORE_SRC=../src/rtl/vndecorrelator.v
-TB_SRC=../src/tb/tb_vndecorrelator.v
+CORE_TB_SRC=../src/tb/tb_vndecorrelator.v
 
-CC=iverilog
+CC = iverilog
+CC_FLAGS= -Wall
 
-
-all: vntest.sim
-
-
-vntest.sim: $(TB_SRC) $(CORE_SRC)
-	$(CC) -o vntest.sim $(TB_SRC) $(CORE_SRC)
+LINT=verilator
+LINT_FLAGS = +1364-2001ext+ --lint-only -Wall -Wno-fatal -Wno-DECLFILENAME
 
 
-sim-core: vntest.sim
-	./vntest.sim
+all: core.sim
+
+
+core.sim: $(CORE_TB_SRC) $(CORE_SRC)
+	$(CC) $(CC_FLAGS) -o core.sim $(CORE_SRC) $(CORE_TB_SRC)
+
+
+sim-core: core.sim
+	./core.sim
+
+
+lint: $(CORE_SRC)
+	$(LINT) $(LINT_FLAGS) $(CORE_SRC)
+
+
+clean:
+	rm *.sim
 
 
 help:
 	@echo "Supported targets:"
 	@echo "------------------"
-	@echo "all:       Build all simulation targets."
-	@echo "vntest.sim Build the core simulation target."
-	@echo "sim-core:  Run core level simulation."
-
-clean:
-	rm vntest.sim
+	@echo "all:      Build all simulation targets."
+	@echo "core.sim  Build the core simulation target."
+	@echo "sim-core: Run core level simulation."
+	@echo "lint:     Run the linter on the source"
+	@echo "clean:    Delete all generared files."
 
 
 #===================================================================
